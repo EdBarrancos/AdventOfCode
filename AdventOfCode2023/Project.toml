@@ -1,0 +1,4 @@
+name = "AdventOfCode2023"
+uuid = "77e59c00-f310-47e3-93d2-7475c245539f"
+authors = ["Eduardo Barrancos <eduardobarrancos11488@gmail.com>"]
+version = "0.1.0"
