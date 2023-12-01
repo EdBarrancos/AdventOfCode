@@ -7,6 +7,10 @@ We need to find the first and last digit to form a two digit number
 
 What is the sum of all callibration number
 
+Part 2
+
+Digits can also be typed out (one -> 1)
+
 =#
 
 input = "two1nine
