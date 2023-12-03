@@ -32,12 +32,12 @@ end
 
 is_set_of_cubes_valid(number, color) = number <= get_max_of_type(color)
 
-function process_set_of_cubes_p1(set_of_cubes)
+function process_set_of_cubes(set_of_cubes)
     parsed_set = split(set_of_cubes, ' ')
     return is_set_of_cubes_valid(parse(Int, parsed_set[2]), parsed_set[end])
 end
 
-function process_round_p1(round)
+function process_round(round)
     parsed_sets = split(round, ',')
     processed_sets = map(process_set_of_cubes_p1, parsed_sets)
     return all(processed_sets)
@@ -45,7 +45,7 @@ end
 
 function is_game_possible(game)
     rounds = split(game, ';')
-    possible_rounds = map(process_round_p1, rounds)
+    possible_rounds = map(process_round, rounds)
     # true -> valid
     return all(possible_rounds)
 end
@@ -56,13 +56,13 @@ function process_game_p1(game)
     return is_game_possible(parsed_game[end]) ? game_id : 0
 end
 
-function exercise2_part1(input::String)
+function exercise2(input::String)
     parsed_input = split(input, "\n")
-    result = map(process_game_p1, parsed_input)
+    result = map(process_game, parsed_input)
     return reduce(+, result)
 end
 
-exercise2_part1(input)
+exercise2(input)
 
 #= PART 2 =#
 
@@ -84,12 +84,12 @@ function update_minimum(number, color, current::PossibleBagValues)
     end
 end
 
-function process_set_of_cubes_p2(set_of_cubes, current::PossibleBagValues)
+function process_set_of_cubes(set_of_cubes, current::PossibleBagValues)
     parsed_set = split(set_of_cubes, ' ')
     return update_minimum(parse(Int, parsed_set[2]), parsed_set[end], current)
 end
 
-function process_round_p2(round, minimum::PossibleBagValues)
+function process_round(round, minimum::PossibleBagValues)
     parsed_sets = split(round, ',')
     for parsed_set in parsed_sets
         minimum = process_set_of_cubes_p2(parsed_set, minimum)
@@ -112,7 +112,7 @@ function process_game(game)
     return possibleValues.red * possibleValues.green * possibleValues.blue
 end
 
-function exercise2_p2(input::String)
+function exercise2(input::String)
     parsed_input = split(input, "\n")
     result = map(process_game, parsed_input)
     return reduce(+, result)
