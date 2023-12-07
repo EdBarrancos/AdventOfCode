@@ -7,8 +7,8 @@ Nunca desceleras
 =#
 
 
-input = "Time:        52     94     75     94
-Distance:   426   1374   1279   1216"
+input = "Time:      7  15   30
+Distance:  9  40  200"
 
 struct Race
     time
