@@ -1,11 +1,9 @@
 #= 
 
-Callibration Document -> Lines of text
-Each line used to contain specific calibration value -> What we are looking for
+Part 1
 
-We need to find the first and last digit to form a two digit number
-
-What is the sum of all callibration number
+Find first and last digit of each line
+Sum the numbers
 
 Part 2
 
@@ -13,65 +11,43 @@ Digits can also be typed out (one -> 1)
 
 =#
 
-input = "two1nine
-eightwothree
-abcone2threexyz
-xtwone3four
-4nineeightseven2
-zoneight234
-7pqrstsixteen"
+input = "1abc2
+pqr3stu8vwx
+a1b2c3d4e5f
+treb7uchet"
 
-function check_number_in_full(line, target_index, number_string, number_return)
-    if length(line) < target_index + length(number_string) - 1
-        return missing
-    end
 
-    if line[target_index:target_index + length(number_string) - 1] == number_string
-        return number_return
+function get_first_digit(line::SubString{String})
+    for character in line
+        if isdigit(character)
+            return character
+        end
     end
-    return missing
 end
 
-function process(line, target_index::Int)
-    if isnumeric(line[target_index])
-        return line[target_index]
+function get_last_digit(line::SubString{String})
+    digit = '0'
+    for character in line
+        if isdigit(character)
+            digit = character
+        end
     end
 
-    one =   check_number_in_full(line, target_index, "one",    "1")
-    two =   check_number_in_full(line, target_index, "two",    "2")
-    three = check_number_in_full(line, target_index, "three",  "3")
-    four =  check_number_in_full(line, target_index, "four",   "4")
-    five =  check_number_in_full(line, target_index, "five",   "5")
-    six =   check_number_in_full(line, target_index, "six",    "6")
-    seven = check_number_in_full(line, target_index, "seven",  "7")
-    eight = check_number_in_full(line, target_index, "eight",  "8")
-    nine =  check_number_in_full(line, target_index, "nine",   "9")
-
-    target = filter(
-        number -> !ismissing(number), 
-        [one, two, three, four, five, six, seven, eight, nine])
-    
-    if isempty(target)
-        return missing
-    end
-
-    return target[begin]
+    return digit
 end
 
+function find_number(line::SubString{String}) :: Int
+    first_digit = get_first_digit(line)
+    second_digit = get_last_digit(line)
 
-function process_line(line)
-    numbers_only = []
-    for i in 1:length(line)
-        push!(numbers_only, process(line, i))
-    end
-    filter!(number -> !ismissing(number), numbers_only)
-    return parse(Int, numbers_only[begin] * numbers_only[end])
+    return parse(Int64, first_digit * second_digit)
 end
 
-function exercise1(input::String)
-    parsed_input = split(input, "\n")
-    numbers = map(process_line, parsed_input)
-    return reduce(+, numbers)
+function main()
+    return sum(map(
+        find_number,
+        split(input, '\n')
+    ))
 end
 
-exercise1(input)
+main()
