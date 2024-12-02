@@ -1000,36 +1000,38 @@ input_string = "16 18 20 22 23 22
 87 85 83 82 79"
 
 getDir(nbr1, nbr2) = (nbr1 - nbr2) / abs(nbr1 - nbr2)
-function compareTwoLevels(nbr1, nbr2, dir)
-    this_dir = getDir(nbr1, nbr2)
-    return this_dir == dir && abs(nbr1 - nbr2) >= 1 && abs(nbr1 - nbr2) <= 3
+
+function checkTwo(report, index1, index2, dir)
+    nbr1 = report[index1]
+    nbr2 = report[index2]
+    current_dir = getDir(nbr1, nbr2)
+    return !isnan(current_dir) && current_dir == dir && abs(nbr1 - nbr2) >= 1 && abs(nbr1 - nbr2) <= 3
 end
 
-function getReportDir(report)
-    if report[1] == report[2]
-        return getDir(report[1], report[3])
+
+function processOneReport(report)
+    dir = getDir(report[1], report[2])
+    for i in 1:length(report)-1
+        if !checkTwo(report, i, i + 1, dir)
+            return false
+        end
     end
-    return getDir(report[1], report[2])
+    return true
+end
+
+function processReport(report)
+    for i in 1:length(report)
+        if processOneReport([report[x] for x = 1:length(report) if x != i])
+            return true
+        end
+    end
+    return false
 end
 
 function parseInput(input_string)
     reports = 0
-    map(
-        report_line -> begin
-            report = []
-            map(nbr -> push!(report, parse(Int, nbr)), split(report_line, ' '))
-            dir = getReportDir(report)
-            if isnan(dir)
-                return
-            end
-            safe = true
-            for i in 1:length(report)-2
-                if !compareTwoLevels(report[i], report[i+1], dir) && !compareTwoLevels(report[i], report[i+2], dir)
-                    safe = false
-                    break
-                end
-            end
-            reports += safe ? 1 : 0
+    map(line -> begin
+            reports += processReport(map(n -> parse(Int, n), split(line, ' '))) ? 1 : 0
         end,
         split(input_string, '\n'))
     println(reports)
